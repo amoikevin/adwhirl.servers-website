@@ -28,7 +28,7 @@
     <label for="password">Password: <a href="/home/login/forgotPassword">(Forgot Password?)</a></label>
     <input name="password" type="password" id="password" onfocus="formInUse = true;" tabindex="2" />
 
-    <input id="submit" name="login" type="submit" class="button" value="Login" tabindex="3" />{if $invalidlogin}<span class="error">&nbsp;&nbsp;Invalid login. Please try again.</span>{/if}
+    <input id="submit" name="login" type="submit" class="button" value="Submit" tabindex="3" />{if $invalidlogin}<span class="error">&nbsp;&nbsp;Invalid login. Please try again.</span>{/if}
     <br />
     <div id="register">Not Registered? <a href="/home/register">Sign Up Now</a></div>
   </form>

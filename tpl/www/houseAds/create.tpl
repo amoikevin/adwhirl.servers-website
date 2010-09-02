@@ -111,7 +111,7 @@
 					</div>
             <p class="formElement required" style="width:471px">
               <label for="delete">Delete Ad:</label>
-               <span class="button"><a id="delete"><span>Delete</span></a></span>	 <span style="padding-left:10px">You'll be asked one more time to confirm.<span>
+               <span class="button"><a id="delete" href='#'><span>Delete</span></a></span>	 <span style="padding-left:10px">You'll be asked one more time to confirm.<span>
             </p>
         </div>        
 {/if}				

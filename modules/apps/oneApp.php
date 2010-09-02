@@ -29,8 +29,7 @@ class oneApp extends appsBase {
     $this->jsFiles[] = '/js/traffic.js';
     $this->jsFiles[] = '/js/jquery.hint.js';
 		$this->jsFiles[] = "/js/jqsm135.js";		
-    $this->jsFiles[] = '/js/jquery-ui-1.8.custom.min.js';
-    $this->styleSheets[] = '/css/start/jquery-ui-1.8.custom.css';
+    $this->jsFiles[] = '/js/jquery.tablesorter.min.js';
 
   }
 
@@ -63,15 +62,20 @@ class oneApp extends appsBase {
       $appHouseAds[$appHouseAd->cid] = $appHouseAd;
     }
     $houseAds = array();
+    fb("getAllHouseAds","");
     $allHouseAds = HouseAdUtil::getHouseAdsByUid($this->user->id);
     // fb("houseAds",HouseAdUtil::getHouseAdsByAid($this->app->id));
-    foreach (HouseAdUtil::getHouseAdsByAid($this->app->id) as $houseAd) {
+    fb("gotAllHouseAdsForThisUser","");    
+    $houseAdsForThisApp = HouseAdUtil::getHouseAdsByAid($this->app->id, $allHouseAds);
+    fb("getAllHouseAdsForThisApp","");
+    foreach ($houseAdsForThisApp as $houseAd) {
       if (array_key_exists($houseAd->id, $appHouseAds)) {
 	      $houseAds[] = $houseAd;
 	      $houseAd->weight = $appHouseAds[$houseAd->id]->weight;
 	      $houseAd->ahid = $appHouseAds[$houseAd->id]->id;
       }
     }
+    fb("prepAddableHouseAds","");
     $addableHouseAds = array(''=>'Choose an Ad');
     foreach ($allHouseAds as $houseAd) {
       if (!array_key_exists($houseAd->id, $appHouseAds)) {
@@ -81,7 +85,7 @@ class oneApp extends appsBase {
 	      }
       }
     }
-    fb("addableHouseAds",$addableHouseAds);
+    fb("doneAddableHouseAds",$addableHouseAds);
     $networks=$this->app->getNetworks();
     if (array_key_exists('9',$networks) && $networks['9']->adsOn==1) {
       $this->smarty->assign('houseAdShare', $networks['9']->weight);
@@ -327,7 +331,9 @@ class oneApp extends appsBase {
     $this->smarty->assign('animationLabels', $animation_label);
   }
   public function createSubmit() {
-   
+    if (isset($_REQUEST['n_aid']) || !isset($_REQUEST['name'])) {
+      $this->redirect('/apps/apps');
+    }
     $this->printHeader = false;
     $this->printFooter = false;
   

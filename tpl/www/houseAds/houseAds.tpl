@@ -94,7 +94,7 @@
 	{/if}
 {else}
 <form id="deleteForm" action="/houseAds/houseAds/delete" method="POST">
-	<span class="button {if $houseAds|@count==0}disabled{/if}"><a id="delete"><span>Delete</span></a></span>  <span class="divider">|</span><span class="plusContainer">
+	<span class="button {if $houseAds|@count==0}disabled{/if}"><a href='#' id="delete"><span>Delete</span></a></span>  <span class="divider">|</span><span class="plusContainer">
 		<a href="/houseAds/ad/create"><span class="plus">Add House Ad</span></a>
 	</span>
 	<div class="clear" style="height:3px"></div>	
@@ -103,18 +103,23 @@
 	  <tr>
 		 <th style="width:30px"><input type="checkbox"/></th>
 	   <th style="width:200px">
-	    Ad Name
+	    <a href="?sortBy={$name}">Ad Name</a>
 	   </th>
 		 <th>
 		 </th>
 	   <th style="text-align:center;width:100px">
-	    Apps it runs in
+
+	     {if $total <= 10}
+	     <a href="?sortBy={$numApp}">Apps it runs in</a>	    
+	     {else}
+	     Apps it runs in
+	     {/if}
 	   </th>
 	   <th style="text-align:center;width:100px">
-	    Goal
+	     <a href="?sortBy={$linkType}">Goal</a>	    
 	   </th>
-	   <th style="text-align:center;width:100px">
-	    Type
+	   <th style="text-align:center;width:100px">	    
+	    <a href="?sortBy={$type}">Type</a>
 	   </th>
 	  </tr>
 	 </thead>
@@ -241,12 +246,13 @@
 {/if}
 <script>
 {literal}
+var msg_id = "{$msg_id}";
 $(document).ready(function() {
   $("#messageBoxClose").click(function(e) {
     e.preventDefault();
     $("#messageBox").hide();
-    $.get('/home/account/setPref?key=msg_002&value=true');
-  });
+    $.get('/home/account/setPref?key='+msg_id+'&value=true');    
+  });	  
 });
 {/literal}
 </script>

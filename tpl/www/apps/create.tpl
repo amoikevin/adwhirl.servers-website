@@ -46,7 +46,7 @@
        <div id="serverInfo" class="section">
           <div class="sectionHeaderActive">
             Ad Serving Settings (Optional)
-<!--            <span class="right"> <a class="showHideButton">Show</a> </span> -->
+<!--            <span class="right"> <a href='#' class="showHideButton">Show</a> </span> -->
           </div>
           <div class="sectionBody"> <!-- Had class "hide" -->
             <p class="formElement required">
@@ -71,7 +71,7 @@
             </p>
             <p class="formElement required">
               <label for="locationOn">Allow Location Access:</label>
-              <a class="onOffImg onOffImg{if $app->locationOn == '1'}On{else}Off{/if}"><input type="hidden" name="locationOn" value="{$app->locationOn}" /></a>            
+              <a href='#' class="onOffImg onOffImg{if $app->locationOn == '1'}On{else}Off{/if}"><input type="hidden" name="locationOn" value="{$app->locationOn}" /></a>            
             </p>                              
           </div>
         </div>

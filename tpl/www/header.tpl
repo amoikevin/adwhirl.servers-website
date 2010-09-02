@@ -31,11 +31,11 @@
          <a href="/home/account">Account Settings</a> | 
          <a href="http://helpcenter.adwhirl.com" target="_newtab">Help</a> |
          <a href="http://groups.google.com/group/adwhirl-users?pli=1" target="_newtab">Forum</a> |
-         <a href="/home/login/logout">Logout</a>
+         <a href="/home/login/logout">Log Out</a>
 			
 			 {else}
 			 		{if $className!='register'}
-       			<a href="/home/register">Sign-up</a> | 
+       			<a href="/home/register">Sign Up</a> | 
 					{/if}
        <a href="http://helpcenter.adwhirl.com" target="_newtab">Help</a>
        		{if $className!='home'} |

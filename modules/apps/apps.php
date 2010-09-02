@@ -32,10 +32,18 @@ class apps extends appsBase {
 
   public function __default() {
     $this->user->postGet();
-    $a = $this->user->getPref('msg_001');
-    if (empty($a)) {
-      $msg_001 = "<span class='msg'>Learn about how you can add unlimited additional networks with <a target='_newtab' href='http://helpcenter.adwhirl.com/content/custom-events-and-generic-notifications'>Custom Events</a></span>";
-      $this->smarty->assign('message', $msg_001);      
+    $b = $this->user->getPref('msg_003');
+    if (empty($b)) {
+      $msg_003 = "<span class='msg'>NEW! AdWhirl now explicitly supports Millennial Media on Android – download the new <a target='_newtab' href='http://code.google.com/p/adwhirl/downloads/list'>AdWhirl Android SDK</a></span>";
+      $this->smarty->assign('message', $msg_003);      
+      $this->smarty->assign('msg_id', 'msg_003');
+    } else {        
+      $a = $this->user->getPref('msg_001');
+      if (empty($a)) {
+        $msg_001 = "<span class='msg'>Learn about how you can add unlimited additional networks with <a target='_newtab' href='http://helpcenter.adwhirl.com/content/custom-events-and-generic-notifications'>Custom Events</a></span>";
+        $this->smarty->assign('message', $msg_001);      
+        $this->smarty->assign('msg_id', 'msg_001');
+      }
     }
     
     $this->smarty->assign('returnPage',isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null);    
@@ -44,9 +52,12 @@ class apps extends appsBase {
     $o = intval($o);
     $apps = AppUtil::getAppsByUid($this->user->id);
     $missingApp = false;
+    $notMissingApp = false || empty($_REQUEST['n_aid']);
     if (!empty($_REQUEST['n_aid'])) {
       foreach ($apps as $app) {       
         $missingApp |= ($app->id != $_REQUEST['n_aid']);
+        $notMissingApp |= ($app->id == $_REQUEST['n_aid']);
+        // echo $notMissingApp . "- " .  $missingApp .'-'. $app->id . '-'. $_REQUEST['n_aid'] . '--'.($app->id == $_REQUEST['n_aid']) .'<br>';
       }      
     }
     if (!empty($_REQUEST['del_aid'])) {
@@ -57,8 +68,9 @@ class apps extends appsBase {
       }      
     }
     
-    fb('missingApp',$missingApp);
-    if ($missingApp) {
+//    fb('missingApp',$missingApp);
+    // echo "NotMissingApp $notMissingApp <br>";
+    if (!$notMissingApp) {
       $app = new App();
       $app->id = $_REQUEST['n_aid'];
       $app->name = $_REQUEST['n_name'];

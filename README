@@ -32,8 +32,11 @@ You will need to allow access to the temporary images folder, and the smart temp
 `chmod 777 www.adwhirl.com/imagesTemp`
 `chmod 777 inc/smarty/templates_c`
 
+Make sure the webserver is running with the current configuration.
+`/etc/init.d/httpd restart`
+
 If you wish to use the charting functionality of the website, you will need to download FusionCharts (http://www.fusioncharts.com/), and copy the .swf files into the FusionCharts directory. They can not be included in the source code of this project due to license restrictions.
 
-So go to http://your-domain:8080/adwhirl/, and you should see your very own hosted configuration website!
+So go to http://your-domain:8080/, and you should see your very own hosted configuration website!
 
 Cheers!

@@ -28,6 +28,7 @@ class Network extends SDBObject {
   const NETWORK_TYPE_JUMPTAP = 2;
   const NETWORK_TYPE_VIDEOEGG = 3;
   const NETWORK_TYPE_MILLENIAL = 6;
+  const NETWORK_TYPE_GREYSTRIPE = 7;
   const NETWORK_TYPE_QUATTRO = 8;
   const NETWORK_TYPE_HOUSE = 9;
   const NETWORK_TYPE_MOBCLIX = 11;
@@ -37,28 +38,34 @@ class Network extends SDBObject {
   const NETWORK_TYPE_EVENT = 17;
   const NETWORK_TYPE_INMOBI = 18;
   const NETWORK_TYPE_IAD = 19;
+  const NETWORK_TYPE_ZESTADZ = 20;
 
   const MAX_PRIORITY = 99;
 
   // Alphabetical
   public static $NETWORKS = array(Network::NETWORK_TYPE_ADMOB => array('name' => 'AdMob',
 								       'Website' => 'http://www.admob.com', 'keyinfo' => array('PublisherID'), 'iphone' => true, 'android' => true),
-				  Network::NETWORK_TYPE_ADSENSE => array('name' => 'Google Adsense',
-									 'Website' => 'http://www.google.com/ads/mobileapps/','keyinfo' => array('API Key'), 'iphone' => true, 'android' => false),
-				  Network::NETWORK_TYPE_IAD => array('name' => 'iAd', 'Website' => 'https://developer.apple.com/iphone/prerelease/library/navigation/index.html#section=Frameworks&topic=iAd', 'keyinfo' => array('SectionId'), 'iphone' => true, 'android' => false),
+				  Network::NETWORK_TYPE_ADSENSE => array('name' => 'Google AdSense',
+									 'Website' => 'http://www.google.com/ads/mobileapps/','keyinfo' => array('Publisher ID'), 'iphone' => true, 'android' => true),
+				  Network::NETWORK_TYPE_GREYSTRIPE => array('name' => 'Greystripe', 
+									    'Website' => 'http://www.greystripe.com/', 'keyinfo' => array('API Key'), 'iphone' => true, 'android' => false),
+				  Network::NETWORK_TYPE_IAD =>  array('name' => 'iAd', 'Website' => 
+								      'https://developer.apple.com/iphone/prerelease/library/navigation/index.html#section=Frameworks&topic=iAd', 
+								      'keyinfo' => array('Apple ID'), 'iphone' => true, 'android' => false),
 				  Network::NETWORK_TYPE_INMOBI => array('name' => 'InMobi (legacy only)', 'keyinfo' => array('API Key'), 'iphone' => true, 'android' => false),
 				  Network::NETWORK_TYPE_JUMPTAP => array('name' => 'Jumptap',
-									 'Website' => 'http://www.jumptap.com','keyinfo' => array('App Code'), 'iphone' => true, 'android' => false),
+									 'Website' => 'http://www.jumptap.com','keyinfo' => array('PublisherID', 'SiteID', 'SpotID'), 'iphone' => true, 'android' => false),
 				  Network::NETWORK_TYPE_MDOTM => array('name' => 'MdotM',
 								       'Website' => 'http://www.mdotm.com/', 'keyinfo' => array('API Key'), 'iphone' => true, 'android' => false),
-				  Network::NETWORK_TYPE_MILLENIAL => array('name' => 'Millenial', 'Website' => 'http://www.millennialmedia.com',
-									   'keyinfo' => array('API Key'), 'iphone' => true, 'android' => false),
+				  Network::NETWORK_TYPE_MILLENIAL => array('name' => 'Millennial Media', 'Website' => 'http://www.millennialmedia.com',
+									   'keyinfo' => array('API Key'), 'iphone' => true, 'android' => true),
 				  Network::NETWORK_TYPE_MOBCLIX => array('name' => 'MobClix (legacy only)', 'Website' => 'http://www.mobclix.com',
 									 'keyinfo' => array('API Key'), 'iphone' => true, 'android' => false),
 				  Network::NETWORK_TYPE_QUATTRO => array('name' => 'Quattro', 'Website' => 'http://www.quattrowireless.com/affiliates/adwhirl?promocode=aff-adwhirl-ja',
 									 'keyinfo' => array('SiteID', 'PublisherID'), 'iphone' => true, 'android' => true),
 				  Network::NETWORK_TYPE_VIDEOEGG => array('name' => 'VideoEgg',	'Website' => 'http://www.videoegg.com/',
 									  'keyinfo' => array('PartnerID', 'SiteID'), 'iphone' => true, 'android' => false),
+				  Network::NETWORK_TYPE_ZESTADZ => array('name' => 'ZestADZ', 'keyinfo' => array('Site ID'), 'iphone' => true, 'android' => true),
 				  Network::NETWORK_TYPE_HOUSE => array('name' => 'House Ads', 'keyinfo' => array(), 'iphone' => true, 'android' => true),
 				  Network::NETWORK_TYPE_GENERIC => array('name' => 'Generic Notification', 'keyinfo' => array(), 'iphone' => true, 'android' => true),
 				  Network::NETWORK_TYPE_EVENT => array('name' => 'Custom Event', 'keyinfo' => array('Name', 'Function Name'), 'iphone' => true, 'android' => true));
@@ -67,6 +74,7 @@ class Network extends SDBObject {
 
   public $id;
   public $aid;
+
   public $type;
 
   // Key is only used internally

@@ -61,7 +61,7 @@
 	 </td>
 	 <td>
   	<span class="reportDetail">
-    <a class="editLink"></a>
+    <a href='#' class="editLink"></a>
 <a href="/reports/applicationReports/?aid={$app->id}"> <img class="editLink" style="vertical-align:middle" src="/img/report.png"/> Reporting</a> 
       </span>	
    </td>
@@ -69,7 +69,7 @@
     {if $app->platform == '1'}iPhone{elseif $app->platform == '2'}Android{else}Unknown{/if}
    </td>
    <td class="{$class} center">
-     <span {if $app->getActiveNetworksCount()==0}style="color:#c00"{/if}>{$app->getActiveNetworksCount()}<span>
+     <span>{$app->getActiveNetworksCount()}<span>
    </td>
   </tr>
 
@@ -89,14 +89,21 @@
     params=''}
 
 <script>
+var msg_id = "{$msg_id}";
 {literal}
 
 
 	$(document).ready(function() {
+	  $(".count").each(function() {
+	    if ($(this).text()=='0') {
+	      $(this).css("color:#c00");
+	    }
+	  });
+	  
     $("#messageBoxClose").click(function(e) {
       e.preventDefault();
       $("#messageBox").hide();
-      $.get('/home/account/setPref?key=msg_001&value=true');
+      $.get('/home/account/setPref?key='+msg_id+'&value=true');
       
     });	  
 

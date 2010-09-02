@@ -52,7 +52,7 @@
           </p>
           <p class="formElement required">
             <label for="locationOn">Allow Location Access:</label>
-            <a class="onOffImg onOffImg{if $app->locationOn == '1'}On{else}Off{/if}"><input type="hidden" name="locationOn" value="{$app->locationOn}" /></a>            
+            <a href='#' class="onOffImg onOffImg{if $app->locationOn == '1'}On{else}Off{/if}"><input type="hidden" name="locationOn" value="{$app->locationOn}" /></a>            
           </p>
         
         </form>
@@ -63,7 +63,7 @@
 					</div>
             <p class="formElement required">
               <label for="delete">Delete App:</label>
-               <span class="button"><a id="delete"><span>Delete</span></a></span>
+               <span class="button"><a id="delete" href='#'><span>Delete</span></a></span>
    			   <span style="padding-left:10px">You'll be asked one more time to confirm</span>
             </p>
         </div>        

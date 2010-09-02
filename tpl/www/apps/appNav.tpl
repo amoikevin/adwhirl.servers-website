@@ -25,7 +25,7 @@
 
 <div style="height:40px"></div>
 {if $header}
-<!-- <span class="right"> <a class="sideShowHideButton">Hide</a> </span> -->
+<!-- <span class="right"> <a href='#' class="sideShowHideButton">Hide</a> </span> -->
 <br>    
 <div class="subSectionHeader">{$header}</div>
 <div class="sectionBody">

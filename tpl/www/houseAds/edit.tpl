@@ -36,7 +36,7 @@
         </p>
       </fieldset>
       <div id="buttons">
-         <span class="button"><a id="save"><span>Save</span></a></span>             
+         <span class="button"><a id="save" href='#'><span>Save</span></a></span>             
       </div>
     </form>
   </div>

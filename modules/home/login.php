@@ -52,10 +52,11 @@ class login extends Webpage {
     $this->printFooter = false;
     $email = $_POST['email'];
     $password = $_POST['password'];
+    $new_password = $_POST['new_password'];
     $user = UserUtil::getUser($email, $password);
     $user = new User($user['id']);
-    if($user != null) {
-      $user->password = User::getHashedPassword($password);
+    if($user->id != null) {
+      $user->password = User::getHashedPassword($new_password);
       $user->put();
       return 'true';
     } else {
@@ -88,18 +89,14 @@ class login extends Webpage {
     return $this->smarty->fetch('../tpl/www/home/forgotPassword.tpl');
   }
 
-	public function isValidLogin() {
-	  $this->printHeader = false;
+  public function isValidLogin() {
+    $this->printHeader = false;
     $this->printFooter = false;
-		$email = $_REQUEST['email'];
-
-    if (!empty($_SESSION['uid'])) {
-      $user = new User($_SESSION['uid']);
-      if ($user->email==$email) return 'true'; else return 'false';
-    }
-		return UserUtil::hasUser($email)=='true'?'false':'true';
-	}
-
+    $email = $_REQUEST['email'];
+    
+    return UserUtil::hasUser($email)=='true'?'false':'true';
+  }
+  
   public function forgotPasswordProcessed() {
     $email = $_POST['email'];
 

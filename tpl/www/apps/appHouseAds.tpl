@@ -14,17 +14,17 @@
 	
 
 	<span class="button {if $houseAds|@count==0}disabled{/if}">
-		<a id="removeApp"><span>Remove From App</span></a>
+		<a id="removeApp" href='#'><span>Remove From App</span></a>
 	</span>
 	<span class="divider">|</span>
 	<span class="plusContainer">
-			<a id="addHouseAd"><span class="plus">Add House Ad</span></a>
+			<a id="addHouseAd" href='#'><span class="plus">Add House Ad</span></a>
 	</span>
 
   <div class="anchor">
      <div id="addHouseAdTip" class="appInfoTip">
        <div class="appInfoTipTop genericTipTop" style="margin-left:15px">         
-			  <span class="plusContainer"><a><span class="plus">Add House Ad</span></a></span>
+			  <span class="plusContainer"><a href='#'><span class="plus">Add House Ad</span></a></span>
          <hr/>
          <div style="float:left;width:323px;"> 
        				<p class="formElement required network">
@@ -40,7 +40,7 @@
 							</span>
          			<div style="text-align:center;padding-top:7px">
 		       		<span class="button disabled">
-								<a id="addToApp" class="disabled setKeyButton button">
+								<a href='#' id="addToApp" class="disabled setKeyButton button">
 									<span>Add To App</span>
 								</a>
 							</span>

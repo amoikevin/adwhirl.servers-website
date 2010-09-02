@@ -63,7 +63,7 @@
 		</form>
 		<div style="text-align:center">
 		<hr/>
-		<span class="button"><a id="save"><span>Register</span></a></span>
+		<span class="button"><a id="save" href='#'><span>Register</span></a></span>
 		</div>
 	
 </div>

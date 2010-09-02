@@ -85,6 +85,8 @@
 <script language="JavaScript" type="text/javascript">
 var currentEmail = "{$user->email}";
 {literal}
+
+
 $(document).ready(function() {
   $("#email").change(function() {
     $('#warnEmail').remove();
@@ -128,12 +130,11 @@ $(document).ready(function() {
   });
   $("#passwordForm").validate({
       submitHandler: function(form) {
-        var data = {};
-        $("#passwordForm input").each(function() {
-          data[$(this).attr('name')]= $(this).val();
-        })
+        var data = {'email':currentEmail,'password':$('#oldpassword').val(),'new_password':$('#password').val()};
+        
         $.post('/home/login/changePassword', data, function(data) {
           $("#changePassword").parent().append($("<span class='msg' style='padding-left:66px'> Your password has "+  (data=='true'?'':'not ') +"been changed.</span>"));
+          $("#changePassword").remove();
           $.modal.close();          
         });
         return false;

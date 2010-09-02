@@ -21,11 +21,20 @@
 
 require_once('modules/houseAds/houseAdsBase.php');
 
-function sortAdsByName($a, $b) {
-  if (strtolower($a->name) == strtolower($b->name)) {
-    return 0;
-  }
-  return (strtolower($a->name) < strtolower($b->name)) ? -1 : 1;
+function numAppAsc($a, $b) {
+  return (count($a->apps) - count($b->apps));
+}
+
+function numAppDsc($a, $b) {
+  return - (count($a->apps) - count($b->apps));
+}
+
+
+function makeSortFunction($field1, $asc=true)
+{
+	$code = "\$retval = ".($asc?'':'-')."strnatcmp(strtolower(\$a->$field1), strtolower(\$b->$field1));
+  return \$retval;";
+  return create_function('$a,$b', $code);
 }
 
 class houseAds extends houseAdsBase {
@@ -35,6 +44,8 @@ class houseAds extends houseAdsBase {
     if (empty($a)) {
       $msg_002 = "<span class='msg'>Learn about our upgraded <a target='_newtab' href='http://helpcenter.adwhirl.com/content/step-6-allocate-your-house-ads'>House Ads</a> functionality</span>";
       $this->smarty->assign('message', $msg_002);      
+      $this->smarty->assign('msg_id', 'msg_002');
+      
     }
     $this->smarty->assign('returnPage',isset($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : null);    
     $this->styleSheets[] = "/css/preview.css";
@@ -45,12 +56,19 @@ class houseAds extends houseAdsBase {
 		$o = isset($_REQUEST['o'])?$_REQUEST['o']:0;
     $o = intval($o);
 
-    $missingAd = false;
+    $haveMissingAd = false; // Assume we don't have the missing ad until we scan them all
     if (!empty($_REQUEST['n_cid'])) {
-      foreach ($houseAds as $houseAd) {       
-        $missingAd |= ($houseAd->id != $_REQUEST['n_cid']);
+      foreach ($houseAds as $houseAd) {
+        // if the current ad has the same id, we know we have the missing ad
+        $haveMissingAd |= $houseAd->id == $_REQUEST['n_cid'];
+
+        // Stop if we know we have the missing ad
+        if($haveMissingAd) break;
       }      
+    } else {
+      $haveMissingAd = true; // no new ad id passed in, so all ads should be in the DB
     }
+
     if (!empty($_REQUEST['del_cid'])) {
       foreach ($houseAds as $idx => $houseAd) {       
         if ($houseAd->id == $_REQUEST['del_cid']) {
@@ -58,8 +76,10 @@ class houseAds extends houseAdsBase {
         }
       }      
     }    
-    fb('missingAd',$missingAd);
-    if ($missingAd) {
+
+    fb('haveMissingAd', $haveMissingAd);
+    // Do we have all the ads? If not, let's add the missing one.
+    if (!$haveMissingAd) {
       $houseAd = new HouseAd();
       $houseAd->id = $_REQUEST['n_cid'];
       $houseAd->name = $_REQUEST['n_name'];
@@ -68,13 +88,43 @@ class houseAds extends houseAdsBase {
       $houseAds[] = $houseAd;
       fb("houseAd", $houseAd);      
     }
-		usort($houseAds, "sortAdsByName");
-		$total = count($houseAds);
-		$itemsPerPage = 10;
-		$houseAds = array_slice($houseAds,$o,$itemsPerPage);
-    foreach ($houseAds as $houseAd) {
-      $houseAd->getApps();
+    $fields = array('name','linkType','type');
+    $total = count($houseAds);
+    
+    if ($total<=10) {
+      $fields[] = 'numApp';
     }
+    $sortBy = isset($_REQUEST['sortBy'])?$_REQUEST['sortBy']:'nameAsc';
+    if (substr($sortBy,-1)=='?') $sortBy = substr($sortBy,0,-1);
+    $isAsc = substr($sortBy,-3)=='Asc';
+    $sortBy = substr($sortBy,0,strlen($sortBy)-3);
+    foreach ($fields as $field) {
+      $fname = $field;      
+      if ($field==$sortBy) {
+        $val = $fname . ($isAsc?'Dsc':'Asc');
+      } else {
+        $val = isset($_REQUEST[$fname])?$_REQUEST[$fname]:$field . 'Asc';
+      }
+      $this->smarty->assign($fname, $val);
+    }
+    $itemsPerPage = 10;		
+    if ($sortBy=='numApp' && $total<=10) {
+      $fname = 'numApp' . ($isAsc?'Asc':'Dsc');
+      foreach ($houseAds as $houseAd) {
+        $houseAd->getApps();
+      }
+      usort($houseAds, $fname);
+    } else {
+      if ($sortBy=='numApp') {
+        $sortBy='name';
+        $isAsc = 'true';
+      }
+		  usort($houseAds, makeSortFunction($sortBy,$isAsc));
+  		$houseAds = array_slice($houseAds,$o,$itemsPerPage);
+      foreach ($houseAds as $houseAd) {
+        $houseAd->getApps();
+      }
+	  }		
     
 		$this->smarty->assign('appsCount', count($apps));
 		$this->smarty->assign('current_offset', $o);

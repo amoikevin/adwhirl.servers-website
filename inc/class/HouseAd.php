@@ -101,10 +101,16 @@ class HouseAd extends SDBObject {
     return $this->apps;
   }
   
-  public static $HOUSEAD_BUCKET = 'CHANGEME';
+  public static $HOUSEAD_BUCKET = 'adrollo-custom-images';
   public static $HOUSEAD_BUCKET_PREFIX = 'http://s3.amazonaws.com/';
-  public static $HOUSEAD_AWS_KEY = 'CHANGEME';
-  public static $HOUSEAD_AWS_SECRET = 'CHANGEME';
+
+  public static $HOUSEAD_AWS_KEY = 
+  	 'CHANGEME';
+
+
+  public static $HOUSEAD_AWS_SECRET = 
+  	 'CHANGEME';
+
 
   const HOUSEAD_TYPE_BANNER = 1;
   const HOUSEAD_TYPE_ICON = 2;

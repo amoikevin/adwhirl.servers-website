@@ -1,7 +1,10 @@
 <?php
 // strip www.adwhirl.com from the current path to get to the root directory of adwhirl
 $r_path = str_replace("www.adwhirl.com", "", getcwd());
-set_include_path($r_path. PATH_SEPARATOR. get_include_path());
+
+$aws_path = $r_path . 'inc/class/amazon-simpledb-2009-04-15-php5-library/src';
+
+set_include_path($r_path. PATH_SEPARATOR . $aws_path . PATH_SEPARATOR . get_include_path());
 
 require_once('inc/class/Webpage.php');
 

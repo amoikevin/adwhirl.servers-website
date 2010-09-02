@@ -10,7 +10,7 @@
    <span id="error" class="error"></span>
   </p>
   <p class="formElement required ">
-	 <label>&nbsp;</label><span class="button"><a id="save"><span>Submit</span></a></span>
+	 <label>&nbsp;</label><span class="button"><a id="save" href='#'><span>Submit</span></a></span>
 	</p>
 </form>
 

@@ -61,8 +61,7 @@ class HouseAdUtil {
     }
     return $houseAds;
   }
-
-  public static function getHouseAdsByAid($aid) {
+  public static function getHouseAdsByAid($aid, $allHouseAds = null) {
     $sdb = SDB::getInstance();
     $domain = self::$SDBDomain_JOIN_AID;
 
@@ -76,12 +75,24 @@ class HouseAdUtil {
       return null;
     }
     $houseAds = array();
-    foreach($aaa as $aa) {
-      $cid = $aa['cid'];
-			
-      $houseAd = new HouseAd($cid);
-      if($houseAd != null && $houseAd->id!=null) {
-	$houseAds[] = $houseAd;
+    if (empty($allHouseAds)) {
+        foreach($aaa as $aa) {
+          $cid = $aa['cid'];
+
+          $houseAd = new HouseAd($cid);
+          if($houseAd != null && $houseAd->id!=null) {
+    	$houseAds[] = $houseAd;
+          }
+        }      
+    } else {
+      $cids = array();
+      foreach($aaa as $aa) {
+        $cids[$aa['cid']]=true;
+      }
+      foreach($allHouseAds as $houseAd) {
+        if (array_key_exists($houseAd->id, $cids)) {
+          $houseAds[] = $houseAd;
+        }
       }
     }
     return $houseAds;

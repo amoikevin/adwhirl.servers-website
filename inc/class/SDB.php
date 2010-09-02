@@ -32,8 +32,13 @@ class SDB {
 
   private static $instance = null;
 
-  private static $SDB_ACCESS_KEY_ID = 'CHANGEME';
-  private static $SDB_SECRET_ACCESS_KEY = 'CHANGEME';
+  private static $SDB_ACCESS_KEY_ID = 
+  	  'CHANGEME';
+
+
+  private static $SDB_SECRET_ACCESS_KEY = 
+  	  'CHANGEME';
+
 
   public static function uuid() {
     return sprintf( '%04x%04x%04x%04x%04x%04x%04x%04x',
@@ -55,7 +60,8 @@ class SDB {
     $this->service = new Amazon_SimpleDB_Client(self::$SDB_ACCESS_KEY_ID, self::$SDB_SECRET_ACCESS_KEY);
   }
   
-  public function select($domain, &$aaa, $where, $showAliveOnly=true) {
+  public function select($domain, &$aaa, $where, $showAliveOnly=true, $attempts=2) {
+    if ($attempts<=0) return;
     if ($showAliveOnly) {
       if(empty($where)) {
 	$where = "where deleted is null";
@@ -111,13 +117,14 @@ class SDB {
       return true;
     }
     catch(Amazon_SimpleDB_Exception $ex) {
-      echo("Caught Exception: ".$ex->getMessage()."<br />\n");
-      echo("Response Status Code: ".$ex->getStatusCode()."<br />\n");
-      echo("Error Code: ".$ex->getErrorCode()."<br />\n");
-      echo("Error Type: ".$ex->getErrorType()."<br />\n");
-      echo("Request ID: ".$ex->getRequestId()."<br />\n");
-      echo("XML: ".$ex->getXML()."<br />\n");
-      echo("Select: $select<br />\n");
+      select($domain, $aaa, $where, $showAliveOnly, $attempts-1);
+      // echo("Caught Exception: ".$ex->getMessage()."<br />\n");
+      // echo("Response Status Code: ".$ex->getStatusCode()."<br />\n");
+      // echo("Error Code: ".$ex->getErrorCode()."<br />\n");
+      // echo("Error Type: ".$ex->getErrorType()."<br />\n");
+      // echo("Request ID: ".$ex->getRequestId()."<br />\n");
+      // echo("XML: ".$ex->getXML()."<br />\n");
+      // echo("Select: $select<br />\n");
     }
 
     return false;

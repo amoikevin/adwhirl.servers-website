@@ -11,8 +11,7 @@
     <ul>
       <li><a href="http://code.google.com/p/adwhirl/downloads/list" target="_blank">Download the latest version</a></li>
       <li><a href="/pdf/AdWhirl_OpenSourceSDK_Setup_Instructions-Android.pdf">Instructions for Android</a></li>
-      <li><a href="/pdf/AdWhirl_OpenSourceSDK_Setup_Instructions-3.0.pdf">Instructions for iPhone 3.0</a></li>
-      <li><a href="/pdf/AdWhirl_OpenSourceSDK_Setup_Instructions-2.2.1.pdf">Instructions for iPhone 2.1.1</a></li>
+      <li><a href="/pdf/AdWhirlSDKInstructionsforiPhone.pdf">Instructions for iPhone</a></li>
     </ul>
 
     <p class="bold">Options for implementing the mediation server:</p>

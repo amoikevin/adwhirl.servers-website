@@ -83,6 +83,7 @@ function fb() {
 	$ms = $curTime-$lastTime;
 	$lastTime= $curTime;
 	$s = "$global_fb_count - $ms: $s";	
+  // echo "$s<br>";
 	$msg = "$global_fb_count: $msg";
 	// echo $msg;
 	FB::dump($s,$v);

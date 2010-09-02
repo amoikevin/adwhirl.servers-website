@@ -18,12 +18,12 @@
   </div>
 {if !$backfill}
 	<div class="clear" style="height:3px"></div>  
-  <span class="plusContainer"><a id="addGeneric" href="#"><span class="plus">Add Custom Events</span></a></span>
+  <span class="plusContainer"><a id="addGeneric" href="#"><span class="plus">Add Custom Event</span></a></span>
   <div class="anchor">
      <div id="addGenericTip" class="appInfoTip">
        <div class="appInfoTipTop genericTipTop">
          
-			  <span class="plusContainer"><a><span class="plus">Add Custom Events</span></a></span>
+			  <span class="plusContainer"><a href='#'><span class="plus">Add Custom Event</span></a></span>
 
          <hr/>
          <div style="float:left;width:323px;">
@@ -62,23 +62,23 @@
   <tr>
 	  {if !$backfill}
    <th style="width:200px">
-    Ad Network
+    <a href="#">Ad Network</a>
    </th>
    <th style="width:200px">
    </th> 
    <th class="center" style="width:160px">
-    Ad Serving
+    <a href="#">Ad Serving</a>
    </th>
 	 <th></th>
    <th class="center" style="width:160px">
-    % of Traffic
+    <a href="#">% of Traffic</a>
    </th>
    {else}
    <th>
-    Ad Network
+    <a href="#">Ad Network</a>
    </th>
    <th style="width:160px">
-    Priority
+    <a href="#">Priority</a>
    </th>
    {/if}
   </tr>
@@ -97,7 +97,7 @@
 		($backfill  && $network->id!='' && $network->adsOn==1)}
 
   <tr>
-   <td>
+   <td class="networkName">
    	<input type="hidden" name="nid[]" value="{$network->id}" /><input type="hidden" name="type[]" value="{$type}" />
 		<span class="networkName">
 
@@ -158,19 +158,19 @@
    {if !$backfill}
    <td class="center adServing">
      {if $network->id==''} 
-				<a class="editLink notConfigured">Not Configured</a> 
+				<a class="editLink notConfigured" href='#'>Not Configured</a> 
 		 {else}
-     		<a class="onOffImg onOffImg{if !$network}Disabled{else}{if $network->adsOn == '1'}On{else}Off{/if}{/if}"></a>   
+     		<a href='#' class="onOffImg onOffImg{if !$network}Disabled{else}{if $network->adsOn == '1'}On{else}Off{/if}{/if}"></a>   
      {/if}
 
    </td>
    <td><input class="adServing" type="hidden" name="adsOn[]" value="{$network->adsOn}" /></td>
-   <td class="center">
+   <td class="center traffic">
     <input name="weight[]" class="traffic" type="text" {if !$network || !$network->adsOn } disabled="disabled"{/if} maxlength="3" temp="{$network->weight}" value="{if !$network || !$network->adsOn }--{else}{$network->weight}{/if}"/> &nbsp; %
 		<input name="priority[]" class="priority" type="hidden" maxlength="3" value="{if $network->priority}{$network->priority}{else}99{/if}" />
    </td>
    {else}
-   <td>
+   <td class="priority">
     <input name="priority[]" class="priority" type="{if $network->id==''}hidden{else}text{/if}" maxlength="3" value="{$network->priority}" />
 		<input name="weight[]" class="traffic" type="hidden" value="{$network->weight}" />
 		<input name="adsOn[]" class="adServing" type="hidden" value="{$network->adsOn}" />
@@ -211,6 +211,19 @@
 	</div>
 	<div class="modalBottom"></div>
 </div>
+
+<div id="turnOffModal" class="hidden">
+	<div class="modalTop center">
+		<img class="modalImage" src="/img/exclamation.png"> <span class="modalHeader"></span>
+		<div class="clear"></div>
+		<span class="modalBody"></span>
+		<hr>
+		<span class="button"><a id="confirmTurnOff" href="#"><span>OK</span></a></span>
+		<span class="button"><a href="#" class="simplemodal-close"><span>Cancel</span></a></span>
+	</div>
+	<div class="modalBottom"></div>
+</div>
+
 
 <div id="deleteModal" class="hidden">
 	<div class="modalTop center">
@@ -292,6 +305,10 @@ function save() {
 }
 
 
+function updateTableCache() {
+  $("#dataTable").trigger("appendCache");
+  $("#dataTable").trigger("update");
+}
 
 $(document).ready(function() {
 	$("body").click(function (e) {		
@@ -361,13 +378,13 @@ $(document).ready(function() {
 				var objRegExp  = /(^\d+$)/;
 				var obj = {};
 				var count = 0;
-				$(".priority").each(function() {
+				$("input.priority").each(function() {
 					if (!$(this).attr('disabled')) {
 						count++;
 					}
 				});
 
-				$(".priority").each(function() {
+				$("input.priority").each(function() {
 					if (!$(this).attr('disabled')) {
 						var val = $(this).val();
 						if (!objRegExp.test(val)) {
@@ -386,27 +403,31 @@ $(document).ready(function() {
 						obj[val] = 'true';						
 					}
 				});
-
-				// var msg = "<br/> The priorities must be a sequences of 1 to "+count+". Missing: ";
-				// var missings = new Array();
-				// for (var i = 1; i<=count; i++) {
-				// 	if (!obj[i]) {
-				// 		missings.push(i);
-				// 		hasError |= true;													
-				// 	}
-				// }
-				// if (missings.length>0) {
-				// 	attacheError($("#cancel"), msg + missings.join(", "));					
-				// }
 			} else {
-				
-				if (traffic.getSum()!=100) {
-					errorObj.attacheError($("#sum"),'Total allocation must be 100%.');
-          // $("#messageBoxIcon").attr('src','/img/exclamation.png');
-          // $("#messageBoxText").html("<span class='error'>Total allocation must be 100%.</span>");
-          // $("#messageBox").show();
+				var trafficSum = traffic.getSum();
+				var turningOffApp = false;
+				if (trafficSum != 100) {
+				  var allOff = true;
+				  if (trafficSum == 0) {				    
+				    $("input.adServing").each(function() {
+				      allOff &= $(this).val()=="0";
+				    });
+  				} 
+  				turningOffApp = trafficSum == 0 && allOff;
+  				if (turningOffApp) {
+  				  $(".modalImage").attr('src','/img/exclamation.png');
+      			$(".modalHeader").text("Turn Off Ad Serving");
+      			$('.modalBody').text("Are you sure you want to turn Ad Serving off for all configured networks?  Your app will not make any ad requests after you click OK.");
+      			$("#turnOffModal").modal({
+      				opacity:80,
+      				overlayCss: {backgroundColor:"#fff"}
+      			});
+  				} else {
+  				  errorObj.attacheError($("#sum"),'Total allocation must be 100%.');					
+  				}
+  				
 				}
-				$(".traffic").each(function() {
+				$("input.traffic").each(function() {
 					if (!$(this).attr('disabled')) {
 						var val = $(this).val();
 						errorObj.testPercent(val,$(this));
@@ -414,16 +435,26 @@ $(document).ready(function() {
 				});
 			
 			}
-			if (!errorObj.hasError()) save();									
+			if (!errorObj.hasError() && !turningOffApp) save();									
 			
+     });
+     $("#confirmTurnOff").click(function() {
+       save();
+       $.modal.close();
      });
 	// storing orig values
   $("input").each(function() {
    	$(this).attr('orig',$(this).attr('value'));
   });  
-  $('input.priority').change(traffic.activateSave);
-	$('input.traffic').change(traffic.setSum);
-	
+  $('input.priority').change(function() {
+    traffic.activateSave();
+    updateTableCache();
+  });
+  $('input.traffic').change(function() {
+    traffic.setSum();
+    updateTableCache();
+  });
+
 	// AppToolTip Section
 	$("#addGeneric").click(function (e) {
 		e.preventDefault();
@@ -478,6 +509,9 @@ $(document).ready(function() {
 			$trafficInput.val(100-traffic.getSum());
       $adsInput.val(1);
 		}
+		if ($trafficInput.val()!=0)
+		  traffic.activateSave();
+		updateTableCache();  
 		traffic.setSum(false);
 	}
 	$("body").click(function (e) {		
@@ -510,22 +544,51 @@ $(document).ready(function() {
 			overlayCss: {backgroundColor:"#fff"}
 		});
 	});
+	var tableSorterHeader = backfill?{}:{1:{sorter:false},3:{sorter:false}};
+	
+	$("#dataTable").tablesorter({
+	  headers: tableSorterHeader,
+	  textExtraction: function(node) { 
+        $n = $(node);
+        if ($n.is('.networkName')) return $n.find('span.networkName').text();
+        if ($n.is('.adServing')) {
+          var as = "-1";
+          $a = $n.find('a');
+          if ($a.is('.notConfigured')) as = "-1";
+          if ($a.is('.onOffImgOff')) as = "0";
+          if ($a.is('.onOffImgOn')) as = "1";
+          return as;
+        }
+        if ($n.is('.traffic')) {
+          var val = $n.find('input.traffic').val();
+          if (val=='--') return "-1";
+          else return val;
+        }
+        if ($n.is('.priority')) {
+          return $n.find('input.priority').val();
+        }
+        
+        return node.innerHTML;
+
+    }
+	  
+	}); 
   $('.setKeyButton').bind("click",
         function(e) {
           e.preventDefault();
           // Disable the button while we save so it only gets pushed once to the DB
           $(this).parent().removeClass('enabled').addClass('disabled');
           traffic.setSum();
-          var nid = $(this).attr('val_nid');
+          var nid = $(this).attr('val_nid');    
           var inputs = $(this).parents(".appInfoTip").find('[name=key[]]');
           var keys = new Array();
           errorObj.reset();
           $(".error").remove();
-          inputs.each(function(i) {
+          inputs.each(function(i) {					
             if (inputs[i].value=="") {
               errorObj.attacheError(this,'This key is required.')
             }
-            keys[i]=inputs[i].value;
+            keys[i]=inputs[i].value;		    
           });
           if (errorObj.hasError()) return false;
           var obj = {
@@ -542,29 +605,32 @@ $(document).ready(function() {
               $(".appInfoTip").hide();
               var type = $($(this).context).attr('val_type');
               if (type=="17") {
-                window.location = window.location;
-              } else {
-                var inputs = $(this).parents(".appInfoTip").find("[name='key[]']");
+                location.reload(true);
+              } else {								
+              var inputs = $(this).parents(".appInfoTip").find("[name='key[]']");
                 inputs.each(function() {
-                  $(this).attr("orig",$(this).val());
+                $(this).attr("orig",$(this).val());									
 //									$(this).val($(this).attr("orig"));
                 });
                 var $tr = $(this).parents("tr");
-                $tr.find("input[name='nid[]']").val(data);
-                var $link = $('<a class="onOffImg onOffImgOff"></a>').click(setOnOff);
-                $tr.find('td.adServing').html('').append($link);
-                $tr.find('input.adServing').val(1);
-                $tr.find('.deleteNetwork').parent().removeClass('disabled');
-                $link.trigger('click');
+  	        $tr.find("input[name='nid[]']").val(data);
+  	        var $tdAdServing = $tr.find('td.adServing');
+  	        if ($tdAdServing.find('a').is('.notConfigured')) {
+    	          var $link = $('<a href="#" class="onOffImg onOffImgOff"></a>').click(setOnOff);
+  	  	  $tdAdServing.html('').append($link);
+    		  $tr.find('input.adServing').val(1);
+    		  $tr.find('.deleteNetwork').parent().removeClass('disabled');
+    		  $link.trigger('click');
+  	        }							
               }
             },
             error: function(e) {
-              alert("saveError:"+e);
+              alert("There was an error saving your changes: "+e);
             }
           });
         }
     );
-    traffic.setSumOnly();
+		traffic.setSumOnly();		
 });
 
 {/literal}
