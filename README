@@ -16,7 +16,7 @@ limitations under the License.
 
 This document assumes that your working directory is the root of the website. It also assuming that you're running this on the AdWhirl AMI.
 
-If you didn't come here from setting up the server, you should take a look at ~/adwhirl/mobile/README first.
+If you didn't come here from setting up the server, you should take a look at ~/adwhirl-servers-mobile/README first.
 
 I have marked areas in the website code that you will need to change with "CHANGEME". 
 
@@ -37,6 +37,6 @@ Make sure the webserver is running with the current configuration.
 
 If you wish to use the charting functionality of the website, you will need to download FusionCharts (http://www.fusioncharts.com/), and copy the .swf files into the FusionCharts directory. They can not be included in the source code of this project due to license restrictions.
 
-So go to http://your-domain:8080/, and you should see your very own hosted configuration website!
+So go to http://<your-instance's-public-hostname>:8080/, and you should see your very own hosted configuration website!
 
 Cheers!
