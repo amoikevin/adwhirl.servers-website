@@ -32,6 +32,10 @@ You will need to allow access to the temporary images folder, and the smart temp
 `chmod 777 www.adwhirl.com/imagesTemp`
 `chmod 777 inc/smarty/templates_c`
 
+Ensure the web server can find the files.
+`mkdir /var/www/html`
+`mount --bind /root/adwhirl-servers-website /var/www/html`
+
 Make sure the webserver is running with the current configuration.
 `/etc/init.d/httpd restart`
 
